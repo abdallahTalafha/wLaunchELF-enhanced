@@ -1301,6 +1301,9 @@ static void Config_Screen(void)
                         setting->screen_y--;
                         updateScreenMode();
                     }
+                } else if (s == CONFIG_SCREEN_MENU_TITLE) {  // cursor is at Menu_Title
+                    setting->Menu_Title[0] = '\0';
+                }
             } else if (new_pad & PAD_SQUARE) {  // Emergency video mode reset
                 setting->TV_mode = TV_mode_AUTO;
                 updateScreenMode();
