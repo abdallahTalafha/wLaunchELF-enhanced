@@ -151,6 +151,11 @@ void GetHddInfo(void)
             sprintf(dbgtmp, "%s \"%s\"", LNG(Found), infoDirEnt.name);
             drawMsg(dbgtmp);
 
+            if (readpad() && (new_pad & (PAD_TRIANGLE | PAD_SELECT | PAD_CIRCLE | PAD_CROSS))) {
+                drawMsg("HDD scan interrupted by user");
+                break;
+            }
+
             memset(&PartyInfo[numParty], 0, sizeof(PARTYINFO));
             memcpy(PartyInfo[numParty].Name, infoDirEnt.name, MAX_PART_NAME);
             PartyInfo[numParty].Name[MAX_PART_NAME] = '\0';
@@ -1135,5 +1140,13 @@ void hddManager(void)
     return;
 }
 //------------------------------
-// endfunc hddManager
+void hddStandby(void)
+{
+    unmountAll();
+    unmountParty(0);
+    unmountParty(1);
+    fileXioDevctl("hdd0:", 0x5001, NULL, 0, NULL, 0);
+}
+//------------------------------
+// endfunc hddStandby
 //--------------------------------------------------------------

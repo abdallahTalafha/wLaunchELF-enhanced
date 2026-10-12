@@ -891,12 +891,46 @@ static void ShowDebugInfo(void)
 
         // Display section
         if (event || post_event) {  // NB: We need to update two frame buffers per event
+            int romVerNum = (ROMVER_data[0] - '0') * 1000 + (ROMVER_data[1] - '0') * 100 + (ROMVER_data[2] - '0') * 10 + (ROMVER_data[3] - '0');
+            const char *iopCore = (romVerNum >= 220) ? "PowerPC 405 (\"Deckard\" Slim)" : "MIPS R3000A (\"Dragon\" Classic)";
+            const char *chassis = "Unknown Chassis";
+            const char *regionStr = (ROMVER_data[4] == 'J') ? "Japan (NTSC-J)" :
+                                    (ROMVER_data[4] == 'E') ? "Europe (PAL)" :
+                                    (ROMVER_data[4] == 'A') ? "USA (NTSC-U/C)" :
+                                    (ROMVER_data[4] == 'H') ? "Asia (NTSC-J)" :
+                                    (ROMVER_data[4] == 'C') ? "China (NTSC-C)" :
+                                    (ROMVER_data[4] == 'K') ? "Korea (NTSC-K)" : "Generic";
+            char consoleType = ROMVER_data[5];
+            const char *typeStr = (consoleType == 'D') ? "DEX (Debug)" :
+                                  (consoleType == 'T') ? "Test/Tool" :
+                                  (consoleType == 'C') ? "CEX (Retail)" : "Custom";
+            int mechapwn_active = (consoleType == 'D' && romVerNum >= 120);
+
+            if (romVerNum <= 101) chassis = "V0-V2 (SCPH-10000..18000 / PCMCIA)";
+            else if (romVerNum <= 110) chassis = "V3 (SCPH-20000/30000 / GH-004..007)";
+            else if (romVerNum <= 120) chassis = "V4 (SCPH-3000x / GH-010..014)";
+            else if (romVerNum <= 150) chassis = "V5/V6 (SCPH-3000xR/3500x / GH-015)";
+            else if (romVerNum <= 160) chassis = "V7/V8 (SCPH-3900x / GH-019..022)";
+            else if (romVerNum <= 170) chassis = "V9/V10 (SCPH-5000x / GH-023..026)";
+            else if (romVerNum <= 190) chassis = "V11 (SCPH-5000x / GH-029)";
+            else if (romVerNum <= 200) chassis = "V12/V13 Slim (SCPH-7000x / GH-032)";
+            else if (romVerNum <= 220) chassis = "V14/V15 Slim (SCPH-7500x/7700x)";
+            else chassis = "V16-V19 Slim (SCPH-7900x/9000x)";
+
             clrScr(setting->color[COLOR_BACKGR]);
-            PrintRow(0, "Debug Info Screen:");
-            sprintf(TextRow, "rom0:ROMVER == \"%s\"", ROMVER_data);
+            PrintRow(0, "Debug Info & Hardware Diagnostics:");
+            sprintf(TextRow, "rom0:ROMVER == \"%s\" [%s, %s]", ROMVER_data, regionStr, typeStr);
             PrintRow(2, TextRow);
+            sprintf(TextRow, "Hardware: %s", chassis);
+            PrintRow(-1, TextRow);
+            sprintf(TextRow, "IOP CPU:  %s", iopCore);
+            PrintRow(-1, TextRow);
+            if (mechapwn_active) {
+                sprintf(TextRow, "MechaPwn / Cross-Region DEX: Enabled");
+                PrintRow(-1, TextRow);
+            }
             sprintf(TextRow, "argc == %d", boot_argc);
-            PrintRow(4, TextRow);
+            PrintRow(-1, TextRow);
             for (i = 0; (i < boot_argc) && (i < 8); i++) {
                 sprintf(TextRow, "argv[%d] == \"%s\"", i, boot_argv[i]);
                 PrintRow(-1, TextRow);

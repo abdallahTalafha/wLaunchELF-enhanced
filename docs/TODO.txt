@@ -1,4 +1,9 @@
--bind button combination for interrupting HDD_manager (cause with 200 partitions it takes 7 minutes and it will be useful to stop hdd manager at some point)
--rewrite FTP part to be more stable
--make SMB (samba share) working
--cleanup code.
+- [DONE] bind button combination for interrupting HDD_manager (PAD_TRIANGLE / PAD_SELECT / PAD_CROSS / PAD_CIRCLE interrupts scan loop)
+- [DONE] add 576P, 720P, 1080I HDTV display mode configurations
+- [DONE] add hardware diagnostics (MechaPwn / DEX detection, Dragon vs Deckard IOP architecture, PS2 motherboard chassis identification)
+- [DONE] add MX4SIO / SIO2SD SD-card root device support in file browser
+- [DONE] add formatted VMC (Virtual Memory Card) creation helper
+- [DONE] add HDD standby / spin-down power-saving routine
+- rewrite FTP part to be more stable
+- make SMB (samba share) working (SMB2/3 modern stack)
+- cleanup code.

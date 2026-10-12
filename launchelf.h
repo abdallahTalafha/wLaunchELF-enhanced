@@ -305,6 +305,9 @@ enum TV_mode {
     TV_mode_PAL,
     TV_mode_VGA,
     TV_mode_480P,
+    TV_mode_576P,
+    TV_mode_720P,
+    TV_mode_1080I,
 
     TV_mode_COUNT
 };
@@ -361,9 +364,13 @@ void unmountParty(int party_ix);
 void unmountAll(void);
 int setFileList(const char *path, const char *ext, FILEINFO *files, int cnfmode);
 
+/* filer.c */
+int createBlankVMC(const char *path, int sizeMB);
+
 /* hdd.c */
 void DebugDisp(const char *Message);
 void hddManager(void);
+void hddStandby(void);
 
 /* editor.c */
 void TextEditor(const char *path);

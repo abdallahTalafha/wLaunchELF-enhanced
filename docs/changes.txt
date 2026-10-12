@@ -1,5 +1,15 @@
 Unofficial LaunchELF releases by EP + dlanor + various contributors
 
+LaunchELF Enhanced (2026):
+- Added 576P, 720P, and 1080I HDTV display mode configurations to Screen Settings and gsKit initialization.
+- Added comprehensive hardware diagnostics:
+  * Automatic MechaPwn / cross-region DEX detection from ROMVER.
+  * IOP Architecture identification: Classic MIPS R3000A ("Dragon") vs PowerPC 405 ("Deckard").
+  * Motherboard chassis generation mapping (V0-V19) from ROMVER date and revision.
+- Implemented interruptible partition scanning in HDD Manager (press Triangle / Select / Cross / Circle to immediately cancel scan).
+- Added HDD spindown and standby power-saving function (hddStandby).
+- Added MX4SIO / SIO2SD SD card device support to root device browser (mx4sio0:) and getDir directory reader.
+- Added createBlankVMC helper to generate formatted MagicGate Virtual Memory Card files directly.
 LaunchELF wip7 (2014.04.06)
 -l_oliveira: Added message about HDL game unloading
 -Rewritten tutorial for compiling uLaunchelf. You need to specify $PS2SDKSRC (which is actually git repository) and run prepare_main.sh or restore_ps2sdk.sh.

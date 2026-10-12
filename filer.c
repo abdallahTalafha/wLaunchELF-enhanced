@@ -1503,6 +1503,10 @@ int getDir(const char *path, FILEINFO *info)
         n = readHDDDVRP(path, info, max);
     else if (!strncmp(path, "mass", 4))
         n = readMASS(path, info, max);
+    else if (!strncmp(path, "mx4sio", 6))
+        n = readMASS(path, info, max);
+    else if (!strncmp(path, "sd", 2))
+        n = readMASS(path, info, max);
     else if (!strncmp(path, "cdfs", 4))
         n = readCD(path, info, max);
     else if (!strncmp(path, "host", 4))
@@ -1514,6 +1518,54 @@ int getDir(const char *path, FILEINFO *info)
 
     return n;
 }
+//--------------------------------------------------------------
+// Function to create and initialize a formatted blank VMC image
+//--------------------------------------------------------------
+int createBlankVMC(const char *path, int sizeMB)
+{
+    int fd;
+    char chunk[4096];
+    int i, totalChunks;
+
+    if (sizeMB < 8)
+        sizeMB = 8;
+    if (sizeMB > 64)
+        sizeMB = 64;
+
+    fd = genOpen((char *)path, O_WRONLY | O_CREAT | O_TRUNC);
+    if (fd < 0)
+        return -1;
+
+    memset(chunk, 0, sizeof(chunk));
+    strcpy(chunk, "Sony PS2 Memory Card Format 1.2");
+    *(u16 *)(chunk + 40) = 512;
+    *(u16 *)(chunk + 42) = 2;
+    *(u16 *)(chunk + 44) = 16;
+    *(u16 *)(chunk + 46) = 0xFF00;
+    *(u32 *)(chunk + 48) = (sizeMB * 1024 * 1024) / 1024;
+    *(u32 *)(chunk + 52) = 1;
+    *(u32 *)(chunk + 56) = (sizeMB * 1024 * 1024) / 1024 - 1;
+    *(u32 *)(chunk + 60) = 0;
+    chunk[200] = 0x02; // PS2_MEMORYCARD
+    chunk[201] = 0x52; // Formatted flag
+
+    genWrite(fd, chunk, sizeof(chunk));
+
+    memset(chunk, 0, sizeof(chunk));
+    totalChunks = ((sizeMB * 1024 * 1024) / sizeof(chunk)) - 1;
+    for (i = 0; i < totalChunks; i++) {
+        if (genWrite(fd, chunk, sizeof(chunk)) != sizeof(chunk)) {
+            genClose(fd);
+            return -1;
+        }
+    }
+
+    genClose(fd);
+    return 0;
+}
+//------------------------------
+// endfunc createBlankVMC
+//--------------------------------------------------------------
 //--------------------------------------------------------------
 // getGameTitle below is used to extract the real save title of
 // an MC gamesave folder. Normally this is held in the icon.sys
@@ -3424,6 +3476,8 @@ int setFileList(const char *path, const char *ext, FILEINFO *files, int cnfmode)
                     files[nfiles++].stats.AttrFile = sceMcFileAttrSubdir;
                 }
             }
+            strcpy(files[nfiles].name, "mx4sio0:");
+            files[nfiles++].stats.AttrFile = sceMcFileAttrSubdir;
         }
         if (!cnfmode || (cnfmode == JPG_CNF)) {
             // This condition blocks selecting any CONFIG items on PC

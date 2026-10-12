@@ -523,6 +523,27 @@ static void applyGSParams(void)
             gsGlobal->Field = GS_FRAME;
             Menu_end_y = Menu_start_y + 22 * FONT_HEIGHT;
             break;
+        case GS_MODE_DTV_576P:
+            SCREEN_WIDTH = 640;
+            SCREEN_HEIGHT = 512;
+            gsGlobal->Interlace = GS_NONINTERLACED;
+            gsGlobal->Field = GS_FRAME;
+            Menu_end_y = Menu_start_y + 26 * FONT_HEIGHT;
+            break;
+        case GS_MODE_DTV_720P:
+            SCREEN_WIDTH = 640;
+            SCREEN_HEIGHT = 720;
+            gsGlobal->Interlace = GS_NONINTERLACED;
+            gsGlobal->Field = GS_FRAME;
+            Menu_end_y = Menu_start_y + 36 * FONT_HEIGHT;
+            break;
+        case GS_MODE_DTV_1080I:
+            SCREEN_WIDTH = 640;
+            SCREEN_HEIGHT = 1080;
+            gsGlobal->Interlace = GS_INTERLACED;
+            gsGlobal->Field = GS_FIELD;
+            Menu_end_y = Menu_start_y + 36 * FONT_HEIGHT;
+            break;
         case GS_MODE_PAL:
             SCREEN_WIDTH = 640;
             SCREEN_HEIGHT = 512;
@@ -581,6 +602,15 @@ void setupGS(void)
         case TV_mode_480P:
             gsGlobal->Mode = GS_MODE_DTV_480P;
             break;
+        case TV_mode_576P:
+            gsGlobal->Mode = GS_MODE_DTV_576P;
+            break;
+        case TV_mode_720P:
+            gsGlobal->Mode = GS_MODE_DTV_720P;
+            break;
+        case TV_mode_1080I:
+            gsGlobal->Mode = GS_MODE_DTV_1080I;
+            break;
         case TV_mode_VGA:
             gsGlobal->Mode = GS_MODE_VGA_640_60;
             break;
@@ -633,6 +663,15 @@ void updateScreenMode(void)
                 break;
             case TV_mode_480P:
                 gsGlobal->Mode = GS_MODE_DTV_480P;
+                break;
+            case TV_mode_576P:
+                gsGlobal->Mode = GS_MODE_DTV_576P;
+                break;
+            case TV_mode_720P:
+                gsGlobal->Mode = GS_MODE_DTV_720P;
+                break;
+            case TV_mode_1080I:
+                gsGlobal->Mode = GS_MODE_DTV_1080I;
                 break;
             case TV_mode_VGA:
                 gsGlobal->Mode = GS_MODE_VGA_640_60;
